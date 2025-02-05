@@ -1,12 +1,12 @@
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth/session';
-import { UserTransactions } from '../components/UserTransactions';
+import { Transactions } from '../components/Transactions';
 
 export default function TransactionsPage() {
     return (
         <div>
-            <h1>User Transactions</h1>
-            <UserTransactions />
+            <h1>All Transactions</h1>
+            <Transactions />
         </div>
     );
 }

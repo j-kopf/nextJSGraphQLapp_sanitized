@@ -8,32 +8,37 @@ const userRoles = {
 
 const resolvers: IResolvers = {
     Query: {
-        fetchUserDetails: (_, { username }, { dataSources }) => {
-            return dataSources.userAPI.getUserDetails(username); // ❌ No authentication check
+        fetchUserDetails: (_, { userId }, { dataSources, session }) => {
+            if (!session) {
+                throw new Error("Session required.");
+            }
+
+            return dataSources.userAPI.getUserDetails(userId); // ❌ No permission check
         },
 
-        fetchTransactionHistory: (_, { username }, { dataSources }) => {
-            return dataSources.userAPI.getTransactionHistory(username); // ❌ No authentication check
+        fetchTransactionHistory: (_, __, { dataSources, session }) => {
+            if (!session) {
+                throw new Error("Session required.");
+            }
+            
+            return dataSources.userAPI.getTransactionHistory(); // ❌ No permission check
         },
 
-        fetchLoanDetails: (_, { username }, { dataSources, user }) => {
-            if (!user || user.role !== "ADMIN") {
+        fetchAccountSettings: (_, { userId }, { dataSources, session }) => {
+            if (!session || session.role !== "ADMIN") {
                 throw new Error("Access Denied"); // ✅ Secure Implementation
             }
-            return dataSources.userAPI.getLoanDetails(username);
-        },
-
-        fetchAccountSettings: (_, { username }, { dataSources, user }) => {
-            if (!user || user.role !== "ADMIN") {
-                throw new Error("Access Denied"); // ✅ Secure Implementation
-            }
-            return dataSources.userAPI.getAccountSettings(username);
+            return dataSources.userAPI.getAccountSettings(userId);
         },
     },
 
     Mutation: {
-        updateUserProfile: (_, { username, newProfileData }, { dataSources }) => {
-            return dataSources.userAPI.updateUserProfile(username, newProfileData); // ❌ No validation, any ADMIN can edit any user
+        deleteUser: (_, { userId }, { dataSources, session }) => {
+            if (!session) {
+                throw new Error("Session required.");
+            }
+
+            return dataSources.userAPI.updateUserProfile(userId); // ❌ No validation, any ADMIN can edit any user
         }
     }
 };
