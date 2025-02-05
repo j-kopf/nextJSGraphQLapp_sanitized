@@ -1,4 +1,4 @@
-import UserTransactions from '../components/UserTransactions';
+import { UserTransactions } from '../components/UserTransactions';
 
 export default function TransactionsPage() {
     return (

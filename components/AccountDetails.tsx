@@ -1,20 +1,22 @@
 import { useQuery, gql } from '@apollo/client';
+import { useSession } from 'next-auth/react';
 
 const FETCH_ACCOUNT_SETTINGS = gql`
-  query fetchAccountSettings($username: String!) {
-    fetchAccountSettings(username: $username) {
-      notifications
-      twoFactorAuth
+    query fetchAccountSettings($userId: String!) {
+        fetchAccountSettings(userId: $userId) {
+            notifications
+            twoFactorAuth
+        }
     }
-  }
 `;
 
-const Account = ({ username, role }: { username: string; role: string }) => {
+export const AccountDetails = ({ userId }: { userId: string }) => {
+    const { role } = useSession();
+    const { data, loading, error } = useQuery(FETCH_ACCOUNT_SETTINGS, { variables: { userId } });
+
     if (role !== "ADMIN") {
         return <p>Access Denied</p>; // ✅ Frontend correctly restricts access
     }
-
-    const { data, loading, error } = useQuery(FETCH_ACCOUNT_SETTINGS, { variables: { username } });
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error loading account settings.</p>;
@@ -28,4 +30,4 @@ const Account = ({ username, role }: { username: string; role: string }) => {
     );
 };
 
-export default Account;
+export default AccountDetails;

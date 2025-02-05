@@ -1,22 +1,22 @@
 import { useQuery, useMutation, gql } from '@apollo/client';
 
 const FETCH_USER_PROFILE = gql`
-  query fetchUserDetails($username: String!) {
-    fetchUserDetails(username: $username) {  // ❌ No authentication check
-      username
-      balance
-      taxID  // ❌ Vulnerability: Exposed to all users, including GUEST
+    query fetchUserDetails($username: String!) {
+        fetchUserDetails(username: $username) {  // ❌ No authentication check
+            username
+            balance
+            taxID  // ❌ Vulnerability: Exposed to all users, including GUEST
+        }
     }
-  }
 `;
 
 const UPDATE_USER_PROFILE = gql`
-  mutation updateUserProfile($username: String!, $newProfileData: String!) {
-    updateUserProfile(username: $username, newProfileData: $newProfileData)  // ❌ Any ADMIN can edit any user
-  }
+    mutation updateUserProfile($username: String!, $newProfileData: String!) {
+        updateUserProfile(username: $username, newProfileData: $newProfileData)  // ❌ Any ADMIN can edit any user
+    }
 `;
 
-const UserProfile = ({ username, loggedInUser, role }: { username: string; loggedInUser: string; role: string }) => {
+export const UserTransactions = () => {
     const { data, loading, error } = useQuery(FETCH_USER_PROFILE, { variables: { username } });
     const [updateProfile] = useMutation(UPDATE_USER_PROFILE);
 
@@ -44,4 +44,4 @@ const UserProfile = ({ username, loggedInUser, role }: { username: string; logge
     );
 };
 
-export default UserProfile;
+export default UserTransactions;

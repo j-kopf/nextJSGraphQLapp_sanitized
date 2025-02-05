@@ -10,6 +10,7 @@
     },
     "dependencies": {
       "next": "latest",
+      "next-auth": "latest",
       "react": "^18.2.0",
       "react-dom": "^18.2.0",
       "apollo-server-micro": "^3.7.0",

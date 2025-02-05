@@ -1,9 +1,9 @@
 import { useQuery, gql } from '@apollo/client';
 
 const FETCH_LOAN_DETAILS = gql`
-  query fetchLoanDetails($username: String!) {
-    fetchLoanDetails(username: $username)
-  }
+    query fetchLoanDetails($username: String!) {
+        fetchLoanDetails(username: $username)
+    }
 `;
 
 const Loan = ({ username, role }: { username: string; role: string }) => {
