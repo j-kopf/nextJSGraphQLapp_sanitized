@@ -15,7 +15,7 @@ export default function TransactionsPage() {
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const session = await getServerSession(req, res)
 
-    if (!session || session.role !== 'ADMIN' || session.role !== 'USER')) {
+    if (!session || session.role !== 'ADMIN') {
         return {
             redirect: {
                 destination: '/unauthorized',

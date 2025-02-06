@@ -38,7 +38,7 @@ const resolvers: IResolvers = {
                 throw new Error("Session required.");
             }
 
-            return dataSources.userAPI.updateUserProfile(userId); // ❌ No validation, any ADMIN can edit any user
+            return dataSources.userAPI.updateUserProfile(userId); // ❌ No validation, any user can delete another user
         }
     }
 };
