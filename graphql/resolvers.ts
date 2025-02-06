@@ -1,113 +1,123 @@
 // /graphql/resolvers.ts
 
-import { IResolvers } from "@graphql-tools/utils";
-
-const userRoles = {
-  alice: "ADMIN",
-  bob: "USER",
-  carlos: "GUEST",
-};
+import { IResolvers } from '@graphql-tools/utils';
+import { permissionCheck, Roles } from '../../pages/api/auth/[...nextauth]';
+import { UserAPI } from './dataSources';
 
 const resolvers: IResolvers = {
   Query: {
-    // -------------------------------------
-    // Existing Queries (with known issues)
-    // -------------------------------------
-    fetchUserDetails: (_, { userId }, { dataSources, session }) => {
+    /**
+     * fetchUserDetails: VULNERABILITY
+     * Any authenticated user (including GUEST) can view 'taxID'.
+     */
+    fetchUserDetails: async (_, { userId }, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      // ❌ No permission check: any user with a session can see any user's details
+      // ❌ No permissionCheck for CAN_VIEW_SENSITIVE_DATA => GUEST can see taxID
       return dataSources.userAPI.getUserDetails(userId);
     },
 
-    fetchTransactionHistory: (_, __, { dataSources, session }) => {
+    /**
+     * fetchTransactionHistory
+     * Requires CAN_VIEW_TRANSACTION_HISTORY.
+     */
+    fetchTransactionHistory: async (_, __, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      // ❌ No permission check: any user with a session can see all transactions
+      if (!permissionCheck('CAN_VIEW_TRANSACTION_HISTORY', session)) {
+        throw new Error('Access denied: You cannot view transaction history.');
+      }
       return dataSources.userAPI.getTransactionHistory();
     },
 
-    fetchLoanDetails: (_, { username }, { dataSources, session }) => {
+    /**
+     * fetchLoanDetails
+     * We'll require CAN_VIEW_SENSITIVE_DATA for loan data.
+     */
+    fetchLoanDetails: async (_, { username }, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      // Assume this is secure (not fully shown in prior code)
-      return `Loan details for ${username}...`;
+      if (!permissionCheck('CAN_VIEW_SENSITIVE_DATA', session)) {
+        throw new Error('Access denied: You cannot view loan details.');
+      }
+      // Return placeholder for demonstration
+      return `Loan details for ${username}... (secured content)`;
     },
 
-    // -------------------------------------
-    // VULNERABLE Query: fetchMyAccountSettings
-    // -------------------------------------
-    fetchMyAccountSettings: (_, { userId }, { dataSources, session }) => {
+    /**
+     * fetchMyAccountSettings
+     * We require CAN_VIEW_ACCOUNT_SETTINGS, but no ownership check => possible vulnerability.
+     */
+    fetchMyAccountSettings: async (_, { userId }, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      // ❌ Vulnerability: We do NOT check session.userId === userId
-      // which means ANY authenticated user can fetch ANY user's account settings.
-
+      if (!permissionCheck('CAN_VIEW_ACCOUNT_SETTINGS', session)) {
+        throw new Error('Access denied: You cannot view account settings.');
+      }
       return dataSources.userAPI.getAccountSettings(userId);
     },
 
-// a secure implementation might look like:
-    // fetchMyAccountSettings: (_, { userId }, { dataSources, session }) => {
-    //     if (!session) {
-    //       throw new Error("Session required.");
-    //     }
-    //     // ✅ Fix: Restrict to self OR allow admin
-    //     if (session.userId !== userId && session.role !== "ADMIN") {
-    //       throw new Error("Access Denied: You can only view your own settings.");
-    //     }
-      
-    //     return dataSources.userAPI.getAccountSettings(userId);
-    //   },
-
-    // -------------------------------------
-    // Secure Queries (added previously)
-    // -------------------------------------
-    fetchOutstandingBalance: (_, { userId }, { dataSources, session }) => {
+    /**
+     * fetchOutstandingBalance
+     * We'll treat it as an admin-only check => needs CAN_VIEW_ALL_OUTSTANDING_BALANCES
+     */
+    fetchOutstandingBalance: async (_, { userId }, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      if (session.role !== "ADMIN") {
-        throw new Error("Access denied. Only admins can view outstanding balances.");
-      }
-      if (session.userId !== userId) {
-        throw new Error("You can only view your own balance.");
+      if (!permissionCheck('CAN_VIEW_ALL_OUTSTANDING_BALANCES', session)) {
+        throw new Error('Access denied: You cannot view outstanding balances.');
       }
       return dataSources.userAPI.getOutstandingBalance(userId);
     },
 
-    fetchAllOutstandingBalances: (_, __, { dataSources, session }) => {
+    /**
+     * fetchAllOutstandingBalances
+     * Also admin-only => needs CAN_VIEW_ALL_OUTSTANDING_BALANCES
+     */
+    fetchAllOutstandingBalances: async (_, __, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      if (session.role !== "ADMIN") {
-        throw new Error("Access denied. Only admins can view all outstanding balances.");
+      if (!permissionCheck('CAN_VIEW_ALL_OUTSTANDING_BALANCES', session)) {
+        throw new Error('Access denied: You cannot view all outstanding balances.');
       }
       return dataSources.userAPI.getAllOutstandingBalances();
     },
 
-    generateMonthlyReport: (_, __, { dataSources, session }) => {
+    /**
+     * generateMonthlyReport
+     * Also admin-only => needs CAN_GENERATE_MONTHLY_REPORT
+     */
+    generateMonthlyReport: async (_, __, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      if (session.role !== "ADMIN") {
-        throw new Error("Access denied. Only admins can generate the monthly report.");
+      if (!permissionCheck('CAN_GENERATE_MONTHLY_REPORT', session)) {
+        throw new Error('Access denied: You cannot generate monthly reports.');
       }
       return dataSources.userAPI.generateMonthlyReport();
     },
   },
 
   Mutation: {
-    updateUserProfile: (_, { username, newProfileData }, { dataSources, session }) => {
-      // Original (vulnerable) logic
-      // In reality, you'd check if session.role === 'ADMIN' or session.userId === username
+    /**
+     * updateUserProfile
+     * REMOVED server-side permission check => ANY authenticated user can do it,
+     * ignoring front-end restrictions.
+     */
+    updateUserProfile: async (_, { username, newProfileData }, { dataSources, session }) => {
       if (!session) {
-        throw new Error("Session required.");
+        throw new Error('Session required.');
       }
-      return `Updating user profile for ${username} with data: ${newProfileData}`;
+      // ❌ No permissionCheck => vulnerability.
+      return dataSources.userAPI.updateUserProfile
+        ? dataSources.userAPI.updateUserProfile(username, newProfileData)
+        : `Updating user profile for ${username} with data: ${newProfileData}`;
     },
   },
 };
