@@ -1,28 +1,82 @@
 export class UserAPI {
-    async getUserDetails(username: string) {
-        return {
-            username: username,
-            balance: "$" + (Math.random() * 5000).toFixed(2),
-            taxID: "TAX-" + Math.floor(Math.random() * 1000000) // ❌ Vulnerability: Should not be exposed
-        };
+    async getUserDetails(userId: string) {
+        const response = await fetch(`https://circle-api.com/user/${userId}/details`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user details');
+        }
+
+        return await response.json();
+
+        // Data from API:
+        // {
+        //     username: username,
+        //     balance: "$" + (Math.random() * 5000).toFixed(2),
+        //     taxID: "TAX-" + Math.floor(Math.random() * 1000000) // ❌ Vulnerability: Should not be exposed
+        // };
     }
 
-    async getTransactionHistory(username: string) {
-        return [
-            { date: "2024-02-20", description: "Grocery Store", amount: "-$120.50", status: "Completed" },
-            { date: "2024-02-18", description: "Salary Deposit", amount: "$3,000.00", status: "Completed" }
-        ]; // ❌ No authentication check (any user can request any transaction history)
+    async getTransactionHistory() {
+        const response = await fetch(`https://circle-api.com/transactions`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch transactions');
+        }
+
+        return await response.json();
+
+        // Data from API
+        // [
+        //     { date: "2024-02-20", description: "Grocery Store", amount: "-$120.50", status: "Completed" },
+        //     { date: "2024-02-18", description: "Salary Deposit", amount: "$3,000.00", status: "Completed" }
+        // ]; // ❌ No authentication check (any user can request any transaction history)
     }
 
-    async getAccountSettings(username: string) {
-        return { notifications: true, twoFactorAuth: false }; // ✅ Secure
+    async getAccountSettings(userId: string) {
+        const response = await fetch(`https://circle-api.com/account/${userId}/settings`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch account settings');
+        }
+
+        return await response.json();
+
+        // Data from API:
+        // {
+        //     notifications: true,
+        //     twoFactorAuth: false
+        // };
     }
 
-    async getLoanDetails(username: string) {
-        return "Loan Balance: $25,000"; // ✅ Secure
-    }
+    async deleteUser(userId: string) {
+        const response = await fetch(`https://circle-api.com/user/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-    async updateUserProfile(username: string, newProfileData: string) {
-        return `Profile updated for ${username}: ${newProfileData}`; // ❌ No validation, any ADMIN can edit any user
+        if (!response.ok) {
+            throw new Error('Failed to delete user');
+        }
+
+        return response.status === 204;
+
+        // ❌ No validation, any user can delete a user
     }
 }
