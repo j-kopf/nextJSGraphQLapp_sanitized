@@ -1,33 +1,57 @@
+// /components/AccountDetails.tsx
+
 import { useQuery, gql } from '@apollo/client';
 import { useSession } from 'next-auth/react';
 
-const FETCH_ACCOUNT_SETTINGS = gql`
-    query fetchAccountSettings($userId: String!) {
-        fetchAccountSettings(userId: $userId) {
-            notifications
-            twoFactorAuth
-        }
+const FETCH_MY_ACCOUNT_SETTINGS = gql`
+  query fetchMyAccountSettings($userId: String!) {
+    fetchMyAccountSettings(userId: $userId) {
+      notifications
+      twoFactorAuth
     }
+  }
 `;
 
 export const AccountDetails = ({ userId }: { userId: string }) => {
-    const { role } = useSession();
-    const { data, loading, error } = useQuery(FETCH_ACCOUNT_SETTINGS, { variables: { userId } });
+  const { data: sessionData, status } = useSession();
+  
+  // We'll assume our session has { userId: string; role: string } if logged in
+  const sessionUserId = sessionData?.userId || null;
 
-    if (role !== "ADMIN") {
-        return <p>Access Denied</p>; // ✅ Frontend correctly restricts access
-    }
+  // 1. Check if we're authenticated
+  if (status === 'loading') {
+    return <p>Loading session...</p>;
+  }
+  if (!sessionUserId) {
+    return <p>Access Denied: You must be logged in.</p>;
+  }
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error loading account settings.</p>;
+  // 2. Front-end Enforced Ownership Check
+  //    Only allow the user to view their own settings.
+  if (sessionUserId !== userId) {
+    return <p>Access Denied: You can only view your own account settings.</p>;
+  }
 
-    return (
-        <div>
-            <h2>Account Settings</h2>
-            <p>Notifications: {data.fetchAccountSettings.notifications ? "Enabled" : "Disabled"}</p>
-            <p>Two-Factor Authentication: {data.fetchAccountSettings.twoFactorAuth ? "Enabled" : "Disabled"}</p>
-        </div>
-    );
+  // 3. Perform the GraphQL query
+  const { data, loading, error } = useQuery(FETCH_MY_ACCOUNT_SETTINGS, {
+    variables: { userId },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading account settings.</p>;
+
+  return (
+    <div>
+      <h2>Account Settings</h2>
+      <p>
+        Notifications: {data.fetchMyAccountSettings.notifications ? 'Enabled' : 'Disabled'}
+      </p>
+      <p>
+        Two-Factor Authentication:{' '}
+        {data.fetchMyAccountSettings.twoFactorAuth ? 'Enabled' : 'Disabled'}
+      </p>
+    </div>
+  );
 };
 
 export default AccountDetails;

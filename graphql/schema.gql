@@ -1,3 +1,5 @@
+# /graphql/schema.gql
+
 type User {
   username: String!
   balance: String!
@@ -16,13 +18,22 @@ type AccountSettings {
   twoFactorAuth: Boolean!
 }
 
+# Existing Queries (with known vulnerabilities)
 type Query {
-  fetchUserDetails(username: String!): User # ❌ No authentication check
-  fetchTransactionHistory(username: String!): [Transaction] # ❌ No authentication check
-  fetchLoanDetails(username: String!): String # ✅ Secure operation
-  fetchAccountSettings(username: String!): AccountSettings # ✅ Secure operation
+  fetchUserDetails(username: String!): User
+  fetchTransactionHistory(username: String!): [Transaction]
+  fetchLoanDetails(username: String!): String
+  # fetchAccountSettings(username: String!): AccountSettings  # REMOVED
+
+  # NEW VULNERABLE QUERY
+  fetchMyAccountSettings(userId: String!): AccountSettings
+
+  fetchOutstandingBalance(userId: String!): String
+  fetchAllOutstandingBalances: [String]
+  generateMonthlyReport: String
 }
 
+# Existing Mutations
 type Mutation {
-  updateUserProfile(username: String!, newProfileData: String!): String # ❌ Any admin can edit any user
+  updateUserProfile(username: String!, newProfileData: String!): String
 }
