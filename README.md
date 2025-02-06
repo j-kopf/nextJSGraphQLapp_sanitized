@@ -1,3 +1,13 @@
+#things to add for prod readme:
+1. no ai/copilot
+2. manually look for these if you don't find them all, its all good
+3. GUEST user role should not see any PII (maybe comment in the code)
+4. want to only edit your own stuff
+5. user mapping file to encompass 3&4 above? 
+6. no teams...individual ? 
+
+
+
 # Secure GraphQL Training with Next.js & Apollo
 
 ## 📌 Project Overview
