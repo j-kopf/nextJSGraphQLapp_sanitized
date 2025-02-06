@@ -1,4 +1,10 @@
+// /graphql/dataSources.ts
+
 export class UserAPI {
+    // =====================================
+    // Existing Methods
+    // =====================================
+
     async getUserDetails(userId: string) {
         const response = await fetch(`https://circle-api.com/user/${userId}/details`, {
             method: 'GET',
@@ -78,5 +84,60 @@ export class UserAPI {
         return response.status === 204;
 
         // ❌ No validation, any user can delete a user
+    }
+
+    // =====================================
+    // New Methods for the Secure Operations
+    // =====================================
+
+    async getOutstandingBalance(userId: string) {
+        // Example endpoint for fetching a single user's outstanding balance
+        const response = await fetch(`https://circle-api.com/user/${userId}/outstandingBalance`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch outstanding balance');
+        }
+
+        // Assume the API returns { balance: "1234.56" }
+        return await response.json();
+    }
+
+    async getAllOutstandingBalances() {
+        // Example endpoint for fetching outstanding balances for all users/companies
+        const response = await fetch(`https://circle-api.com/outstandingBalances`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch all outstanding balances');
+        }
+
+        // Assume the API returns array of objects or a simple array of balances
+        return await response.json();
+    }
+
+    async generateMonthlyReport() {
+        // Example endpoint for generating or fetching a monthly report
+        const response = await fetch(`https://circle-api.com/reports/monthly`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to generate monthly report');
+        }
+
+        // Assume it returns a string or structured data
+        return await response.text();
     }
 }
