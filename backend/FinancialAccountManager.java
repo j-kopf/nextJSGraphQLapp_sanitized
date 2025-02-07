@@ -1,6 +1,7 @@
 package backend;
 import java.util.*;
 import java.io.*;
+import java.io.ObjectInputFilter.Config;
 import java.util.logging.*;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -18,6 +19,8 @@ class FinancialAccountManager {
             DB_USER = config.getDatabase().getDbUser();
             DB_PASSWORD = config.getDatabase().getDbPassword();
             API_KEY = config.getApi().getPaymentGatewayKey();
+            logger.info("user Info" + DB_USER + ", " + API_KEY);
+
         } catch (IOException e) {
             //logger.log(Level.SEVERE, "Error loading configuration: {0}", e.getMessage()); // ✅ Secure logging
             e.printStackTrace();  // ❌ Vulnerability: Exposes stack trace which may contain file paths or database credentials
