@@ -1,8 +1,7 @@
 // /graphql/resolvers.ts
 
 import { IResolvers } from '@graphql-tools/utils';
-import { permissionCheck, Roles } from '../../pages/api/auth/[...nextauth]';
-import { UserAPI } from './dataSources';
+import { permissionCheck } from '../permissions/check';
 
 const resolvers: IResolvers = {
   Query: {

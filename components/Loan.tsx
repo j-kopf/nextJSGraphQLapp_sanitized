@@ -1,6 +1,6 @@
 import { useQuery, gql } from '@apollo/client';
 import { useSession } from 'next-auth/react';
-import { permissionCheck } from '../pages/api/auth/[...nextauth]';
+import { permissionCheck } from '../permissions/check';
 
 const FETCH_LOAN_DETAILS = gql`
   query fetchLoanDetails($username: String!) {
