@@ -2,7 +2,7 @@ import { ApolloServer } from "apollo-server-micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import resolvers from "../../graphql/resolvers";
 import { UserAPI } from "../../graphql/dataSources";
-import jwt from "jsonwebtoken";
+import { getServerSession } from 'next-auth';
 import fs from "fs";
 import path from "path";
 
@@ -13,29 +13,15 @@ const typeDefs = fs.readFileSync(
   "utf8"
 );
 
-const SECRET_KEY = "SuperSecretKey"; // ❌ Hardcoded key for demonstration (should be in env variables)
-
 // Create the Apollo server
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }: { req: NextApiRequest }) => {
-    const token = req.headers.authorization?.split(" ")[1];
-    let session = null;
+  context: async ({ req, res }: { req: NextApiRequest, res: NextApiResponse }) => {
+    const session = await getServerSession(req, res)
 
-    if (token) {
-      try {
-        // Decodes JWT. Example payload might be: { sub: "alice", role: "ADMIN", iat:..., exp:... }
-        const decoded: any = jwt.verify(token, SECRET_KEY);
-
-        // Build a session object with userId and role
-        session = {
-          userId: decoded.sub,
-          role: decoded.role,
-        };
-      } catch (err) {
-        console.warn("Invalid token"); // ❌ In real production, you might throw an error or handle it more gracefully.
-      }
+    if (!session) {
+      throw new Error("Session required.");
     }
 
     return {

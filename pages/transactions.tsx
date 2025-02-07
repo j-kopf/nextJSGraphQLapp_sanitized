@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { Transactions } from '../components/Transactions';
-import { permissionCheck } from './api/auth/[...nextauth]';
+import { permissionCheck } from '../permissions/check';
 
 export default function TransactionsPage() {
   return (

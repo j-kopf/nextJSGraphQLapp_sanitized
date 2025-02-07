@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { useSession } from 'next-auth/react';
-import { permissionCheck } from '../pages/api/auth/[...nextauth]';
+import { permissionCheck } from '../permissions/check';
 
 const FETCH_USER_DETAILS = gql`
   query fetchUserDetails($userId: String!) {
