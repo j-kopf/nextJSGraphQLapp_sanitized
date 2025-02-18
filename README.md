@@ -18,6 +18,40 @@ Some Rules for the interactive activity:
 ### How can we verify this solution? (1-2 bullet points)
 
 
+## 📁 **Project Structure**
+/nextjsgraphqlapp_sanitized
+  ├─ /backend
+  │   └─ FinancialAccountManager.java
+  ├─ /components
+  │   ├─ AccountDetails.tsx
+  │   ├─ Loan.tsx
+  │   ├─ Transactions.tsx
+  │   └─ UserDetails.tsx
+  ├─ /config
+  │   └─ config.yaml
+  ├─ /graphql
+  │   ├─ dataSources.ts
+  │   ├─ resolvers.ts
+  │   └─ schema.gql
+  ├─ /pages
+  │   ├─ index.tsx
+  │   ├─ transactions.tsx
+  │   ├─ unauthorized.tsx
+  │   ├─ /api
+  │   │   ├─ auth
+  │   │   │   └─ [...nextauth].ts
+  │   │   └─ graphql.ts
+  │   └─ /profile
+  │       └─ [userId].tsx
+  ├─ /permissions
+  │   └─ check.ts
+  ├─ /styles
+  │   ├─ components.css
+  │   └─ globals.css
+  ├─ README.md
+  └─ package.json
 
+
+  If the above is formatting badly, see the screenshot below:
 ![image](https://github.com/user-attachments/assets/47a3242b-1918-4ea7-a222-71854eca3d73)
 
