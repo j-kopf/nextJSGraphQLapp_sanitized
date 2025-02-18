@@ -3,7 +3,7 @@
 type User {
   username: String!
   balance: String!
-  taxID: String! # ❌ Sensitive data exposed
+  taxID: String!
 }
 
 type Transaction {
@@ -18,16 +18,12 @@ type AccountSettings {
   twoFactorAuth: Boolean!
 }
 
-# Existing Queries (with known vulnerabilities)
+# Existing Queries 
 type Query {
   fetchUserDetails(username: String!): User
   fetchTransactionHistory(username: String!): [Transaction]
   fetchLoanDetails(username: String!): String
-  # fetchAccountSettings(username: String!): AccountSettings  # REMOVED
-
-  # NEW VULNERABLE QUERY
   fetchMyAccountSettings(userId: String!): AccountSettings
-
   fetchOutstandingBalance(userId: String!): String
   fetchAllOutstandingBalances: [String]
   generateMonthlyReport: String

@@ -5,15 +5,10 @@ import { permissionCheck } from '../permissions/check';
 
 const resolvers: IResolvers = {
   Query: {
-    /**
-     * fetchUserDetails: VULNERABILITY
-     * Any authenticated user (including GUEST) can view 'taxID'.
-     */
     fetchUserDetails: async (_, { userId }, { dataSources, session }) => {
       if (!session) {
         throw new Error('Session required.');
       }
-      // ❌ No permissionCheck for CAN_VIEW_SENSITIVE_DATA => GUEST can see taxID
       return dataSources.userAPI.getUserDetails(userId);
     },
 
@@ -31,10 +26,6 @@ const resolvers: IResolvers = {
       return dataSources.userAPI.getTransactionHistory();
     },
 
-    /**
-     * fetchLoanDetails
-     * We'll require CAN_VIEW_SENSITIVE_DATA for loan data.
-     */
     fetchLoanDetails: async (_, { username }, { dataSources, session }) => {
       if (!session) {
         throw new Error('Session required.');
@@ -46,10 +37,6 @@ const resolvers: IResolvers = {
       return `Loan details for ${username}... (secured content)`;
     },
 
-    /**
-     * fetchMyAccountSettings
-     * We require CAN_VIEW_ACCOUNT_SETTINGS, but no ownership check => possible vulnerability.
-     */
     fetchMyAccountSettings: async (_, { userId }, { dataSources, session }) => {
       if (!session) {
         throw new Error('Session required.');
@@ -60,10 +47,6 @@ const resolvers: IResolvers = {
       return dataSources.userAPI.getAccountSettings(userId);
     },
 
-    /**
-     * fetchOutstandingBalance
-     * We'll treat it as an admin-only check => needs CAN_VIEW_ALL_OUTSTANDING_BALANCES
-     */
     fetchOutstandingBalance: async (_, { userId }, { dataSources, session }) => {
       if (!session) {
         throw new Error('Session required.');
@@ -88,10 +71,6 @@ const resolvers: IResolvers = {
       return dataSources.userAPI.getAllOutstandingBalances();
     },
 
-    /**
-     * generateMonthlyReport
-     * Also admin-only => needs CAN_GENERATE_MONTHLY_REPORT
-     */
     generateMonthlyReport: async (_, __, { dataSources, session }) => {
       if (!session) {
         throw new Error('Session required.');
@@ -104,16 +83,10 @@ const resolvers: IResolvers = {
   },
 
   Mutation: {
-    /**
-     * updateUserProfile
-     * REMOVED server-side permission check => ANY authenticated user can do it,
-     * ignoring front-end restrictions.
-     */
     updateUserProfile: async (_, { username, newProfileData }, { dataSources, session }) => {
       if (!session) {
         throw new Error('Session required.');
       }
-      // ❌ No permissionCheck => vulnerability.
       return dataSources.userAPI.updateUserProfile
         ? dataSources.userAPI.updateUserProfile(username, newProfileData)
         : `Updating user profile for ${username} with data: ${newProfileData}`;

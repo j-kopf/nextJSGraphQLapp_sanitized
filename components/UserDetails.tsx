@@ -38,12 +38,10 @@ export const UserDetails = ({ userId }: { userId: string }) => {
   const [deleteUser] = useMutation(DELETE_USER);
 
   const handleDeleteUser = () => {
-    // For deleting, we need CAN_DELETE_USERS in the front-end check
     if (!permissionCheck('CAN_DELETE_USERS', sessionData)) {
       alert('You do not have permission to delete this user.');
       return;
     }
-    // In reality, you'd check userId vs session.userId, etc.
     deleteUser({ variables: { username: userId, newProfileData: 'DELETED' } });
   };
 

@@ -9,14 +9,7 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    /**
-     * JWT Callback
-     * For demonstration, we simply map GitHub user "alice" => ADMIN,
-     * "bob" => USER, everything else => GUEST.
-     */
     async jwt({ token }) {
-      // If you have a GitHub username, let's see who you are.
-      // token.name might be the GitHub profile name.
       switch (token?.name?.toLowerCase()) {
         case 'alice':
           token.role = Roles.ADMIN;

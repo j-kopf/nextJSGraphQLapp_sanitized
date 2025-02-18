@@ -28,7 +28,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  // Check if user has 'CAN_VIEW_TRANSACTION_HISTORY'
   if (!permissionCheck('CAN_VIEW_TRANSACTION_HISTORY', session)) {
     return {
       redirect: {

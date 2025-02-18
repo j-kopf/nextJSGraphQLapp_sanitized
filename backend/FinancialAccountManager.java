@@ -22,8 +22,7 @@ class FinancialAccountManager {
             logger.info("user Info" + DB_USER + ", " + API_KEY);
 
         } catch (IOException e) {
-            //logger.log(Level.SEVERE, "Error loading configuration: {0}", e.getMessage()); // ✅ Secure logging
-            e.printStackTrace();  // ❌ Vulnerability: Exposes stack trace which may contain file paths or database credentials
+            e.printStackTrace(); 
         }
     }
 
@@ -70,8 +69,7 @@ class FinancialAccountManager {
             logger.info("Transaction successful: " + from + " sent $" + amount + " to " + to);
             System.out.printf("Transaction successful: %s sent $%.2f to %s%n", from, amount, to);
         } catch (Exception e) {
-            //logger.log(Level.SEVERE, "Transaction error: {0}", e.getMessage()); // ✅ Secure logging
-            e.printStackTrace();  // ❌ Vulnerability: Could expose sensitive user data or database connection details in logs
+            e.printStackTrace();  
         }
     }
 }

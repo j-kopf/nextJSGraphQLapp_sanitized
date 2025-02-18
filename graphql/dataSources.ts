@@ -18,13 +18,6 @@ export class UserAPI {
         }
 
         return await response.json();
-
-        // Data from API:
-        // {
-        //     username: username,
-        //     balance: "$" + (Math.random() * 5000).toFixed(2),
-        //     taxID: "TAX-" + Math.floor(Math.random() * 1000000) // ❌ Vulnerability: Should not be exposed
-        // };
     }
 
     async getTransactionHistory() {
@@ -40,12 +33,6 @@ export class UserAPI {
         }
 
         return await response.json();
-
-        // Data from API
-        // [
-        //     { date: "2024-02-20", description: "Grocery Store", amount: "-$120.50", status: "Completed" },
-        //     { date: "2024-02-18", description: "Salary Deposit", amount: "$3,000.00", status: "Completed" }
-        // ]; // ❌ No authentication check (any user can request any transaction history)
     }
 
     async getAccountSettings(userId: string) {
@@ -61,12 +48,6 @@ export class UserAPI {
         }
 
         return await response.json();
-
-        // Data from API:
-        // {
-        //     notifications: true,
-        //     twoFactorAuth: false
-        // };
     }
 
     async deleteUser(userId: string) {
@@ -82,16 +63,11 @@ export class UserAPI {
         }
 
         return response.status === 204;
-
-        // ❌ No validation, any user can delete a user
     }
 
-    // =====================================
-    // New Methods for the Secure Operations
-    // =====================================
 
     async getOutstandingBalance(userId: string) {
-        // Example endpoint for fetching a single user's outstanding balance
+        //  endpoint for fetching a single user's outstanding balance
         const response = await fetch(`https://circle-api.com/user/${userId}/outstandingBalance`, {
             method: 'GET',
             headers: {
@@ -108,7 +84,7 @@ export class UserAPI {
     }
 
     async getAllOutstandingBalances() {
-        // Example endpoint for fetching outstanding balances for all users/companies
+        //  endpoint for fetching outstanding balances for all users/companies
         const response = await fetch(`https://circle-api.com/outstandingBalances`, {
             method: 'GET',
             headers: {
@@ -125,7 +101,7 @@ export class UserAPI {
     }
 
     async generateMonthlyReport() {
-        // Example endpoint for generating or fetching a monthly report
+        //  endpoint for generating or fetching a monthly report
         const response = await fetch(`https://circle-api.com/reports/monthly`, {
             method: 'GET',
             headers: {
