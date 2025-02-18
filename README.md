@@ -11,14 +11,8 @@ Some Rules for the interactive activity:
 6. again, if you don't finish in time it's OK. feel free to ping me for any questions at any point.
 
 
-
-// .github/pull-request-template.md
-### What security problem did you see? (1-2 bullet points)
-### What solution does your PR suggest? (1-2 bullet points)
-### How can we verify this solution? (1-2 bullet points)
-
-
 ## 📁 **Project Structure**
+```
 /nextjsgraphqlapp_sanitized
   ├─ /backend
   │   └─ FinancialAccountManager.java
@@ -50,6 +44,7 @@ Some Rules for the interactive activity:
   │   └─ globals.css
   ├─ README.md
   └─ package.json
+  ```
 
 
   If the above is formatting badly, see the screenshot below:
