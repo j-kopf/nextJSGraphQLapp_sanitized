@@ -1,3 +1,5 @@
+/// this file is meant to represent a separate backend service that is being built out 
+/// and added to our offerings in some manner
 package backend;
 import java.util.*;
 import java.io.*;
