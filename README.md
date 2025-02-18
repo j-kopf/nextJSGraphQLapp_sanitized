@@ -47,6 +47,4 @@ Some Rules for the interactive activity:
   ```
 
 
-  If the above is formatting badly, see the screenshot below:
-![image](https://github.com/user-attachments/assets/47a3242b-1918-4ea7-a222-71854eca3d73)
 
