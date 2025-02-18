@@ -7,7 +7,7 @@ Some Rules for the interactive activity:
 2. manually look for these if you don't find them all, its all good. Feel free to submit a PR to fix issues, or just note what's wrong, whatever you will get most valu
 3. work individually, feel free to chat with a colleague if needed.
 4. this code not build or compile. this is just meant to be a code exercise so this does n
-5. ideally, you'll submit a PR with a fix for each issue you find. If you decide to do that, the format should be something like the below (pull-request.template.md). However, other options for this include noting all issues locally in some fashion (google Doc, or whatever else), or documenting all issies in a "New Issue" in GitHub. 
+5. ideally, you'll submit a PR with a fix for each issue you find. If you decide to do that, the format is defined in .github/pull_request_template.md. However, other options for this include noting all issues locally in some fashion (google Doc, or whatever else is comfortable for you), or documenting all issies in a "New Issue" in GitHub. 
 6. again, if you don't finish in time it's OK. feel free to ping me for any questions at any point.
 
 
