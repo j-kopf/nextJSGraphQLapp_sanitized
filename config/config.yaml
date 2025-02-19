@@ -6,6 +6,7 @@ database:
   dbHost: "{{secretsmanager:/prod/db/host}}"
   dbPort: "{{secretsmanager:/prod/db/port}}"
 
+# keys shouldn't be cleartext here
 api:
   paymentGatewayKey: "Fg7H2yLdM8VpQz3N6RbXtPWaK4CsJ9T5"  
   smsProviderKey: "X1Y2Z3A4B5C6D7E8F9G0H1I2J3K4L5M6" 

@@ -9,6 +9,8 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 class FinancialAccountManager {
+
+    // these shuold be short-lived variables instead of class properties to avoid potential leaks
     private static String DB_USER;
     private static String DB_PASSWORD;
     private static String API_KEY;
@@ -21,6 +23,8 @@ class FinancialAccountManager {
             DB_USER = config.getDatabase().getDbUser();
             DB_PASSWORD = config.getDatabase().getDbPassword();
             API_KEY = config.getApi().getPaymentGatewayKey();
+
+            // shouldn't log this
             logger.info("user Info" + DB_USER + ", " + API_KEY);
 
         } catch (IOException e) {
@@ -30,6 +34,7 @@ class FinancialAccountManager {
 
     public static void main(String[] args) {
         logger.info("Starting banking operations");
+        // shouldn't be logging db username
         System.out.println("Connecting to DB with user: " + DB_USER);
         performBankingOperations();
     }
@@ -40,6 +45,7 @@ class FinancialAccountManager {
         logger.info("Fetching account balances");
         System.out.println("Account Balances:");
         accountBalances.forEach((name, balance) -> 
+            // name shouldn't be logged, balance might be okay depending on the context
             System.out.printf("%s: $%.2f%n", name, balance)
         );
 
@@ -53,24 +59,32 @@ class FinancialAccountManager {
 
     public static void processTransaction(String from, String to, double amount) {
         try {
+            // missing input validation
+
             Map<String, Double> balances = fetchBalancesFromDB();
 
             if (!balances.containsKey(from) || !balances.containsKey(to)) {
+                // depending on the context, account numbers could be sensitive information and shouldn't be logged or added to the exceptions
                 logger.warning("Invalid transaction: Account not found for " + from + " or " + to);
                 throw new Exception("Invalid transaction: Account not found for " + from + " or " + to);
             }
 
+            // balance check is not thread-safe
             if (balances.get(from) < amount) {
+                // depending on the context, account numbers could be sensitive information and shouldn't be logged or added to the exceptions
                 logger.warning("Transaction failed: Insufficient funds in account: " + from);
                 throw new Exception("Insufficient funds in account: " + from);
             }
 
+            // balances are not updated in the db
             balances.put(from, balances.get(from) - amount);
             balances.put(to, balances.get(to) + amount);
             
+            // depending on the context account numbers could be sensitive information and shouldn't be logged or added to the exceptions
             logger.info("Transaction successful: " + from + " sent $" + amount + " to " + to);
             System.out.printf("Transaction successful: %s sent $%.2f to %s%n", from, amount, to);
         } catch (Exception e) {
+            // need to use an appropriate logger with severity etc.
             e.printStackTrace();  
         }
     }

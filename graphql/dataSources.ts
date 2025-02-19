@@ -1,5 +1,6 @@
 // /graphql/dataSources.ts
 
+// there is not authentication at all in these calls, backend should also be doing authentication and authorisation
 export class UserAPI {
     // =====================================
     // Existing Methods

@@ -5,6 +5,7 @@ import { permissionCheck } from '../permissions/check';
 
 const resolvers: IResolvers = {
   Query: {
+    // a user can fetch any user's details, userId should be fetched from authentication creds
     fetchUserDetails: async (_, { userId }, { dataSources, session }) => {
       if (!session) {
         throw new Error('Session required.');
