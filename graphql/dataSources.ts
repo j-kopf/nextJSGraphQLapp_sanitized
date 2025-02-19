@@ -6,6 +6,8 @@ export class UserAPI {
     // =====================================
 
     async getUserDetails(userId: string) {
+        // the api host should be loaded from the config file
+        // No AUTH?
         const response = await fetch(`https://circle-api.com/user/${userId}/details`, {
             method: 'GET',
             headers: {
@@ -21,6 +23,8 @@ export class UserAPI {
     }
 
     async getTransactionHistory() {
+        // the api host should be loaded from the config file
+        // No AUTH?
         const response = await fetch(`https://circle-api.com/transactions`, {
             method: 'GET',
             headers: {
@@ -36,6 +40,8 @@ export class UserAPI {
     }
 
     async getAccountSettings(userId: string) {
+        // the api host should be loaded from the config file
+        // No AUTH?
         const response = await fetch(`https://circle-api.com/account/${userId}/settings`, {
             method: 'GET',
             headers: {
@@ -51,6 +57,8 @@ export class UserAPI {
     }
 
     async deleteUser(userId: string) {
+        // the api host should be loaded from the config file
+        // No AUTH?
         const response = await fetch(`https://circle-api.com/user/${userId}`, {
             method: 'DELETE',
             headers: {
@@ -67,6 +75,8 @@ export class UserAPI {
 
 
     async getOutstandingBalance(userId: string) {
+        // the api host should be loaded from the config file
+        // No AUTH?
         //  endpoint for fetching a single user's outstanding balance
         const response = await fetch(`https://circle-api.com/user/${userId}/outstandingBalance`, {
             method: 'GET',
@@ -101,6 +111,8 @@ export class UserAPI {
     }
 
     async generateMonthlyReport() {
+        // the api host should be loaded from the config file
+        // No AUTH?
         //  endpoint for generating or fetching a monthly report
         const response = await fetch(`https://circle-api.com/reports/monthly`, {
             method: 'GET',

@@ -26,6 +26,8 @@ export const UserDetails = ({ userId }: { userId: string }) => {
   if (!sessionData) {
     return <p>You must be logged in to view user details.</p>;
   }
+
+  // Ditto, auth check should be done on Server side
   // For reading user details, require CAN_VIEW_SENSITIVE_DATA
   if (!permissionCheck('CAN_VIEW_SENSITIVE_DATA', sessionData)) {
     return <p>Access Denied: You cannot view user details.</p>;
@@ -38,6 +40,7 @@ export const UserDetails = ({ userId }: { userId: string }) => {
   const [deleteUser] = useMutation(DELETE_USER);
 
   const handleDeleteUser = () => {
+    // Ditto, auth check should be done on Server side
     if (!permissionCheck('CAN_DELETE_USERS', sessionData)) {
       alert('You do not have permission to delete this user.');
       return;

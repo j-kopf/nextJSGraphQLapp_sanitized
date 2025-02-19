@@ -7,7 +7,9 @@ database:
   dbPort: "{{secretsmanager:/prod/db/port}}"
 
 api:
+  # we should not have API key here
   paymentGatewayKey: "Fg7H2yLdM8VpQz3N6RbXtPWaK4CsJ9T5"  
+  # ditto
   smsProviderKey: "X1Y2Z3A4B5C6D7E8F9G0H1I2J3K4L5M6" 
   internalServiceToken: "{{secretsmanager:/prod/api/internalService}}"  
   analyticsIntegrationKey: "{{ssm:/prod/api/analytics}}"  

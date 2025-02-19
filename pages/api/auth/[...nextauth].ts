@@ -11,6 +11,7 @@ export default NextAuth({
   callbacks: {
     async jwt({ token }) {
       switch (token?.name?.toLowerCase()) {
+        // Should not hardcode role assignment, this can be easily bypassed
         case 'alice':
           token.role = Roles.ADMIN;
           break;

@@ -2,8 +2,8 @@
 
 type User {
   username: String!
-  balance: String!
-  taxID: String!
+  balance: String! @auth(requires: CAN_VIEW_SENSITIVE_DATA)
+  taxID: String! @auth(requires: CAN_VIEW_SENSITIVE_DATA)
 }
 
 type Transaction {
@@ -20,16 +20,16 @@ type AccountSettings {
 
 # Existing Queries 
 type Query {
-  fetchUserDetails(username: String!): User
-  fetchTransactionHistory(username: String!): [Transaction]
-  fetchLoanDetails(username: String!): String
-  fetchMyAccountSettings(userId: String!): AccountSettings
-  fetchOutstandingBalance(userId: String!): String
-  fetchAllOutstandingBalances: [String]
-  generateMonthlyReport: String
+  fetchUserDetails(username: String!): User @auth(requires: CAN_VIEW_SENSITIVE_DATA)
+  fetchTransactionHistory(username: String!): [Transaction] @auth(requires: CAN_VIEW_TRANSACTION_HISTORY)
+  fetchLoanDetails(username: String!): String @auth(requires: CAN_VIEW_SENSITIVE_DATA)
+  fetchMyAccountSettings(userId: String!): AccountSettings @auth(requires: CAN_VIEW_ACCOUNT_SETTINGS)
+  fetchOutstandingBalance(userId: String!): String @auth(requires: CAN_VIEW_OUTSTANDING_BALANCES)
+  fetchAllOutstandingBalances: [String] @auth(requires: CAN_VIEW_ALL_OUTSTANDING_BALANCES)
+  generateMonthlyReport: String @auth(requires: CAN_GENERATE_REPORTS)
 }
 
 # Existing Mutations
 type Mutation {
-  updateUserProfile(username: String!, newProfileData: String!): String
+  updateUserProfile(username: String!, newProfileData: String!): String @auth(requires: CAN_UPDATE_PROFILE)
 }

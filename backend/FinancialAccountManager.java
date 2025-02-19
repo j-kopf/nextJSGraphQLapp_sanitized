@@ -15,28 +15,34 @@ class FinancialAccountManager {
     private static final Logger logger = Logger.getLogger(FinancialAccountManager.class.getName());
 
     static {
+        // We SHOULD NOT store credentials in the config static file, these should live in K8s secrets
         try (InputStream input = new FileInputStream("config.yaml")) {
             Yaml yaml = new Yaml(new Constructor(Config.class));
             Config config = yaml.load(input);
             DB_USER = config.getDatabase().getDbUser();
             DB_PASSWORD = config.getDatabase().getDbPassword();
             API_KEY = config.getApi().getPaymentGatewayKey();
-            logger.info("user Info" + DB_USER + ", " + API_KEY);
+            // Should not log api key
+            // logger.info("user Info" + DB_USER + ", " + API_KEY);
 
         } catch (IOException e) {
-            e.printStackTrace(); 
+            // Should log the error instead of print
+            logger.warn("Encountered exception", e);
+            //e.printStackTrace(); 
         }
     }
 
     public static void main(String[] args) {
         logger.info("Starting banking operations");
-        System.out.println("Connecting to DB with user: " + DB_USER);
+        // db user is sensitive info and cannot be exposed in console output
+        // System.out.println("Connecting to DB with user: " + DB_USER);
         performBankingOperations();
     }
 
     public static void performBankingOperations() {
         Map<String, Double> accountBalances = fetchBalancesFromDB();
 
+        // Should not log user data
         logger.info("Fetching account balances");
         System.out.println("Account Balances:");
         accountBalances.forEach((name, balance) -> 
@@ -65,6 +71,7 @@ class FinancialAccountManager {
                 throw new Exception("Insufficient funds in account: " + from);
             }
 
+            // we are not updating the balance in db transaction but in memory here
             balances.put(from, balances.get(from) - amount);
             balances.put(to, balances.get(to) + amount);
             
