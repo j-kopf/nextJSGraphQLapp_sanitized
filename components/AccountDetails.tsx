@@ -21,6 +21,7 @@ export const AccountDetails = ({ userId }: { userId: string }) => {
     return <p>You must be logged in to view account settings.</p>;
   }
 
+  // Auth check should be done on Server Side
   // Front-end check for viewing account settings
   if (!permissionCheck('CAN_VIEW_ACCOUNT_SETTINGS', sessionData)) {
     return <p>Access Denied: You cannot view account settings.</p>;

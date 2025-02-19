@@ -5,6 +5,7 @@ export enum Roles {
     GUEST = 'GUEST',
   }
   
+  // Role permission should not be hardcoded, should be stored on server side
   export const RolePermissions = {
     [Roles.ADMIN]: {
       CAN_VIEW_SENSITIVE_DATA: true,
@@ -33,6 +34,7 @@ export enum Roles {
   };
   
 
+  // should be checked from Server side as client side can be easily mutated
   export function permissionCheck(
     permission: keyof typeof RolePermissions[Roles.ADMIN],
     session?: { role?: Roles }

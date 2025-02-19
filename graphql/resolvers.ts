@@ -20,6 +20,7 @@ const resolvers: IResolvers = {
       if (!session) {
         throw new Error('Session required.');
       }
+      // ditto: auth check should be done on server side
       if (!permissionCheck('CAN_VIEW_TRANSACTION_HISTORY', session)) {
         throw new Error('Access denied: You cannot view transaction history.');
       }
@@ -30,6 +31,7 @@ const resolvers: IResolvers = {
       if (!session) {
         throw new Error('Session required.');
       }
+      // ditto: auth check should be done on server side
       if (!permissionCheck('CAN_VIEW_SENSITIVE_DATA', session)) {
         throw new Error('Access denied: You cannot view loan details.');
       }
@@ -41,6 +43,7 @@ const resolvers: IResolvers = {
       if (!session) {
         throw new Error('Session required.');
       }
+      // ditto: auth check should be done on server side
       if (!permissionCheck('CAN_VIEW_ACCOUNT_SETTINGS', session)) {
         throw new Error('Access denied: You cannot view account settings.');
       }
@@ -51,6 +54,7 @@ const resolvers: IResolvers = {
       if (!session) {
         throw new Error('Session required.');
       }
+      // ditto: auth check should be done on server side
       if (!permissionCheck('CAN_VIEW_ALL_OUTSTANDING_BALANCES', session)) {
         throw new Error('Access denied: You cannot view outstanding balances.');
       }
@@ -65,6 +69,7 @@ const resolvers: IResolvers = {
       if (!session) {
         throw new Error('Session required.');
       }
+      // ditto: auth check should be done on server side
       if (!permissionCheck('CAN_VIEW_ALL_OUTSTANDING_BALANCES', session)) {
         throw new Error('Access denied: You cannot view all outstanding balances.');
       }
@@ -75,6 +80,7 @@ const resolvers: IResolvers = {
       if (!session) {
         throw new Error('Session required.');
       }
+      // ditto: auth check should be done on server side
       if (!permissionCheck('CAN_GENERATE_MONTHLY_REPORT', session)) {
         throw new Error('Access denied: You cannot generate monthly reports.');
       }

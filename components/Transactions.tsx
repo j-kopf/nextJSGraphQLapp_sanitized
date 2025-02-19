@@ -20,6 +20,7 @@ export const Transactions = () => {
     return <p>You must be logged in to view transactions.</p>;
   }
 
+  // Ditto, auth check should be done on Server side
   if (!permissionCheck('CAN_VIEW_TRANSACTION_HISTORY', sessionData)) {
     return <p>Access Denied: You do not have permission to view transaction history.</p>;
   }
@@ -29,6 +30,7 @@ export const Transactions = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading transactions.</p>;
 
+  // we do need to check if we are exposing sensitive user data in the FE
   return (
     <table>
       <thead>

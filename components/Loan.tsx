@@ -15,6 +15,7 @@ const Loan = ({ username }: { username: string }) => {
     return <p>Access Denied: You must be logged in.</p>;
   }
 
+  // Ditto, auth check should be done on Server side
   // Must have CAN_VIEW_SENSITIVE_DATA to see loan details
   if (!permissionCheck('CAN_VIEW_SENSITIVE_DATA', sessionData)) {
     return <p>Access Denied: You do not have permission to view loan details.</p>;
