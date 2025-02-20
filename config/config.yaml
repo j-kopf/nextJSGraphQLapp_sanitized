@@ -3,7 +3,7 @@
 database:
   dbUser: "{{ssm:/prod/db/user}}"
   dbPassword: "{{ssm:/prod/db/password}}"
-  dbHost: "{{secretsmanager:/prod/db/host}}"
+  dbHost: "{{secretsmanager:/prod/db/host}}" // again, config file itself should not have any sensitive data. All sensitive data should be stored in K8s secret manager
   dbPort: "{{secretsmanager:/prod/db/port}}"
 
 api:
