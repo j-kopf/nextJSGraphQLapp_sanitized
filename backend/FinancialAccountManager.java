@@ -10,8 +10,8 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 class FinancialAccountManager {
     private static String DB_USER;
-    private static String DB_PASSWORD;
-    private static String API_KEY;
+    private static String DB_PASSWORD; // these should not be in the code, should use k8s secret manager
+    private static String API_KEY;  // these should not be in the code, should use k8s secret manager
     private static final Logger logger = Logger.getLogger(FinancialAccountManager.class.getName());
 
     static {
@@ -21,7 +21,7 @@ class FinancialAccountManager {
             DB_USER = config.getDatabase().getDbUser();
             DB_PASSWORD = config.getDatabase().getDbPassword();
             API_KEY = config.getApi().getPaymentGatewayKey();
-            logger.info("user Info" + DB_USER + ", " + API_KEY);
+            logger.info("user Info" + DB_USER + ", " + API_KEY); // sensitive data should not be logged
 
         } catch (IOException e) {
             e.printStackTrace(); 
@@ -30,16 +30,16 @@ class FinancialAccountManager {
 
     public static void main(String[] args) {
         logger.info("Starting banking operations");
-        System.out.println("Connecting to DB with user: " + DB_USER);
+        System.out.println("Connecting to DB with user: " + DB_USER); // printing should not be used
         performBankingOperations();
     }
 
     public static void performBankingOperations() {
         Map<String, Double> accountBalances = fetchBalancesFromDB();
 
-        logger.info("Fetching account balances");
+        logger.info("Fetching account balances"); // customer account balances is sensitive financial data, should not be logged this way, along with the below
         System.out.println("Account Balances:");
-        accountBalances.forEach((name, balance) -> 
+        accountBalances.forEach((name, balance) ->
             System.out.printf("%s: $%.2f%n", name, balance)
         );
 
@@ -65,7 +65,7 @@ class FinancialAccountManager {
                 throw new Exception("Insufficient funds in account: " + from);
             }
 
-            balances.put(from, balances.get(from) - amount);
+            balances.put(from, balances.get(from) - amount); // these are not atomic operations, doing this will cause inconsistency balance calculation. Should use DB transaction with lock ti perform account balance update
             balances.put(to, balances.get(to) + amount);
             
             logger.info("Transaction successful: " + from + " sent $" + amount + " to " + to);
